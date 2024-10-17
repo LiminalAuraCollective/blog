@@ -3,20 +3,26 @@ import Link from "next/link";
 import type { Posts } from "contentlayer/generated";
 import { allPosts } from "contentlayer/generated";
 import HeaderBox from "@/components/HeaderBox";
+import { AccType, GroupPostsType } from "@/types";
 
 export default function Posts() {
-  const groupedAllPosts = allPosts.reduce((acc: any, item) => {
+  const groupedAllPosts = allPosts.reduce((acc: AccType, item) => {
     const { date } = item;
     acc[format(date, "yyyy")] = acc[format(date, "yyyy")] || [];
     acc[format(date, "yyyy")].push(item);
     return acc;
   }, {});
   const sortedAllPosts = Object.entries(groupedAllPosts)
-    .map(([year, data]) => ({ year, data }))
-    .sort((a: any, b: any) => b.year - a.year)
-    .map((item: any) => ({
+    .map(([year, data]) => {
+      return { year, data };
+    })
+    .sort(
+      (a: GroupPostsType, b: GroupPostsType) =>
+        parseInt(b.year) - parseInt(a.year)
+    )
+    .map((item: GroupPostsType) => ({
       ...item,
-      data: item.data.sort((a: any, b: any) =>
+      data: item.data.sort((a: Posts, b: Posts) =>
         compareDesc(new Date(a.date), new Date(b.date))
       ),
     }));
@@ -25,7 +31,7 @@ export default function Posts() {
     <main>
       <HeaderBox />
       <section>
-        {sortedAllPosts.slice(0, 1).map((_allPosts: any) => (
+        {sortedAllPosts.slice(0, 1).map((_allPosts: GroupPostsType) => (
           <div key={_allPosts.year}>
             <div className="mb-4">
               {_allPosts.year}
