@@ -22,7 +22,6 @@ export default function PostsDirectory() {
         });
       }
     });
-    console.log(dirs);
     setDirectdory(dirs);
   }, []);
 
