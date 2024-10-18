@@ -15,4 +15,9 @@
         -webkit-text-size-adjust: 100%;
         -ms-text-size-adjust: 100%;
     }
+
+    ::selection {
+        color: rgb(29, 29, 29);
+        background-color: rgb(61, 220, 151);
+    }
 }

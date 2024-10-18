@@ -1,3 +1,4 @@
 @import './tailwindcss.css';
-@import "./posts.css";
 @import './scrollbar.css';
+@import "./posts.css";
+@import './custom.css';

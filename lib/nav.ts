@@ -6,15 +6,11 @@ export const NavList = [
   },
   {
     title: "Photos",
-    url: "/photos",
+    url: "https://wallpapers-phi.vercel.app/",
   },
   {
     title: "Books",
     url: "/books",
-  },
-  {
-    title: "More",
-    url: "/more",
   },
 ];
 

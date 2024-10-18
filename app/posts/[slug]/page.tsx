@@ -18,7 +18,7 @@ export const generateMetadata = async ({
     (_posts) => _posts.slug === decodeURIComponent(params.slug)
   ) as Posts;
   return {
-    title: `立冬 | ${posts.title}`,
+    title: posts.title,
     description: posts.description,
     keywords: posts?.labels.join(", "),
   };
