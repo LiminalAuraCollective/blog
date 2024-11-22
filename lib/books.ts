@@ -5,7 +5,7 @@ const books: BooksList[] = [
     title: "东京梦华录",
     author: "[宋] 孟元老",
     labels: ["传记", "北宋史"],
-    status: "在读",
+    status: "已读",
   },
   {
     title: "画家之眼",

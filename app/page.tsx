@@ -34,7 +34,7 @@ export default function Home() {
       {/* banner */}
       <section className="relative md:h-80 h-52">
         <Image
-          src="/images/Minecraft_sunset_over_water.webp"
+          src="/images/anime_character_embrace_scene.webp"
           alt=""
           fill
           priority
