@@ -5,12 +5,12 @@ export const NavList = [
     url: "/weekly",
   },
   {
-    title: "Photos",
-    url: "https://wallpapers-phi.vercel.app/",
-  },
-  {
     title: "Books",
     url: "/books",
+  },
+  {
+    title: "Wallpapers",
+    url: "https://wallpapers-phi.vercel.app/",
   },
 ];
 
