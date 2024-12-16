@@ -1,0 +1,50 @@
+---
+title: Github项目搜索技巧
+description: 如何在 GitHub 上更有效地搜索 issue、repo 和更多信息
+date: 2022-07-15
+category: 学习
+labels:
+  - 学习
+  - 技巧
+  - github
+---
+
+### 如何在 GitHub 上搜索 issues 和 pull requests
+
+- is:issue is:open label:beginner——这个特别的查询会列出所有具有开放的、并标有 beginner 的 issues 的项目。
+- is:issue is:open label:easy——这将列出所有被标记为 easy 的开放 issues。
+- is:issue is:open label:first-timers-only——这将列出所有欢迎第一次做贡献的人们的开放 issues。
+- is:issue is:open label:good-first-bug——这将列出带有 good-first-bug 标签的开放 issues 的项目，以吸引贡献者为其工作。
+- is:issue is:open label:"good first issue"——这将列出所有带有 good first issue 标签的开放 issues，意味着它是初学者入门的好地方。
+- is:issue is:open label:starter——这将列出整个 GitHub 中所有标有 starter 的开放 issues。
+- is:issue is:open label:up-for-grabs——这将列出开放的 issues，如果你有必要的技能，就可以进行工作。
+- no:project type:issue is:open——这将列出所有没有分配给特定项目的开放 issues。
+- no:milestone type:issue is:open——很多时候，项目是用里程碑来追踪的。但如果你想找到没有被跟踪的 issues，这个搜索查询将为你列出这些项目。
+- no:label type:issue is:open——这将列出所有没有标签的开放 issues。
+- is:issue is:open no:assignee——这显示所有尚未分配给某人的开放 issues。
+
+### 如何通过名称、描述、README 查找仓库
+
+- 使用 in:name。比方说，你正在寻找资源，以了解更多关于数据科学的信息。在这种情况下，你可以使用 Data Science in:name 命令，它将列出仓库名称中含有 Data Science 的仓库。
+- 使用 in:description。如果你想找到具有特定描述的仓库，例如，仓库的描述中包含 “freeCodeCamp” 一词，我们的搜索将是：freecodecamp in:description。
+- 使用 in:readme。你用它来搜索一个文件的 README 中的某一短语。如果我们想找到 README 中包含 freecodecamp 这个词的仓库，我们的搜索将是：freecodecamp in:readme。
+- 使用 in:topic。你用它来查找某个短语或单词是否被标注在主题中。例如，要找到所有在主题中列出 freecodecamp 的仓库，我们的搜索将是：freecodecamp in:topic。
+
+### 如何按 Stars、Forks 数 查找
+
+- 使用 stars:n。如果你搜索一个有 1000 star 的仓库，那么你的搜索查询将是 stars:1000。这将列出正好有 1000 star 的仓库。
+- 使用 forks:n。这指定了一个仓库应该有的 fork 数。如果你想找到少于 100 个 fork 的仓库，你的搜索将是：forks:&lt;100。（你可以随时使用关系运算符，如 `>、<、>=、<= ...`  来帮助你进一步缩小搜索范围。）
+
+### 如何按语言类型查找
+
+- 使用 language:LANGUAGE。例如，如果你想找到用 PHP 编写的仓库，你的搜索将是：language:PHP
+
+### 按组织名称查找
+
+- 搜索 org:orgname，它将列出与 orgname 相匹配的仓库
+
+### 按日期查找
+
+使用关键词之一进行搜索：created、updated、merged 和 closed。这些关键词应该伴随着格式为 YYYY-MM-DD 的日期一起使用.你也可以使用 `>、<、>=、<= ...` 来搜索指定日期之后、之前和指定日期的日期
+
+- 使用 keyword:YYYY-MM-DD。举个例子，我们想搜索所有在 2022-10-01 之后创建的带有 freeCodeCamp 这个词的仓库。那么我们的搜索将是：freecodecamp created:>2022-10-01。
