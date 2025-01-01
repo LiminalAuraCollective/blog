@@ -31,7 +31,6 @@ export default function PostLayout({ params }: { params: { slug: string } }) {
   if (!posts) {
     return notFound();
   }
-  console.log(posts)
 
   return (
     <article>

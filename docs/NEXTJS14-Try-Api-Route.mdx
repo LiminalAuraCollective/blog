@@ -1,0 +1,115 @@
+---
+title: 关于当前在 14.x 或 15.x 中如何声明使用 API 路由
+date: 2024-01-01
+description: 关于当前在 14.x 或 15.x 中如何声明使用 API 路由
+category: 学习
+labels:
+  - 学习
+  - React
+  - 配置
+---
+
+### 关于当前在 14.x 或 15.x 中如何声明使用 API 路由
+
+在当前 14.x~15.x 版本中，声明 api 路由时，通过在指定目录下按照指定格式进行声明
+
+1. `app`目录或者`src`目录下，创建一个 `api`目录。
+
+2. 在改目录下创建 API 路由文件声明，注意：在这里创建的文件名称必须为 `route`,不能为其他任何名称。不同的路由路径以不同的文件夹名称替代。例如：
+
+```typescript
+/**
+ * 文件路径1 /app/api/route.ts
+ */
+import { NextResponse } from "next/server";
+
+export async function GET() {
+  const data = [
+    {
+      src: "/music/少女的祈祷-杨千嬅.mp3",
+      lrc: "/music/少女的祈祷-杨千嬅.lrc",
+    },
+  ];
+  return NextResponse.json({ data });
+}
+```
+
+```ts
+/*
+* 文件路径2 /app/api/docs/route.ts
+*/
+import { NextResponse, NextRequest } from "next/server";
+
+function getUrlParams(url: string) {
+  const _url = url.split("?")[1] || "";
+  const searchParams = new URLSearchParams(_url);
+  const queryParams: Record<string, string> = {};
+  for (const [key, value] of searchParams) {
+    queryParams[key] = value;
+  }
+  return queryParams;
+}
+
+/**
+ * GET
+ */
+export async function GET(_req: NextRequest) {
+  const _query = getUrlParams(_req.url);
+  const data = [
+    {
+      title: "东京梦华录",
+      author: "[宋] 孟元老",
+      labels: ["传记", "北宋史"],
+      status: "已读",
+    },
+  ];
+  return NextResponse.json({ data, query: _query });
+}
+
+/**
+ * POST
+ */
+export async function POST(_req: NextRequest) {
+  const body = await _req.json();
+  switch (body.name || "") {
+    case "孟元老":
+      return NextResponse.json({ name: "《东京梦华录》" });
+    default:
+      return NextResponse.json({ msg: "暂无相关书籍信息" });
+  }
+}
+```
+
+3. 在页面中进行数据请求
+
+```tsx
+/*
+* 页面路径：/app/page.tsx
+*/
+"use client";
+
+import React from "react";
+
+export default function Home() {
+  const handlerFetch = async () => {
+    const [data1, data2] = await Promise.all([
+      fetch("/api"),
+      fetch("/api/docs?name=Mengyuanlao"),
+    ]);
+    const data3 = await fetch("/api/docs", {
+      method: "POST",
+      body: JSON.stringify({ name: "孟元老" }),
+    });
+    const d1 = await data1.json();
+    const d2 = await data2.json();
+    const d3 = await data3.json();
+    console.log("d1：", d1);
+    console.log("d2：", d2);
+    console.log("d3：", d3);
+  };
+  React.useEffect(() => {
+    handlerFetch();
+  }, []);
+  return <div>Music Player</div>;
+}
+```
