@@ -1,87 +1,88 @@
-import { compareDesc, format } from "date-fns";
-import Image from "next/image";
+import clsx from "clsx";
 import Link from "next/link";
-import type { Posts } from "contentlayer/generated";
-import { allPosts } from "contentlayer/generated";
-import HeaderBox from "@/components/HeaderBox";
-import { FollowMe } from "@/lib/nav";
-import { AccType, GroupPostsType } from "@/types";
 
 export default function Home() {
-  const groupedAllPosts = allPosts.reduce((acc: AccType, item) => {
-    const { date } = item;
-    acc[format(date, "yyyy")] = acc[format(date, "yyyy")] || [];
-    acc[format(date, "yyyy")].push(item);
-    return acc;
-  }, {});
-  const sortedAllPosts = Object.entries(groupedAllPosts)
-    .map(([year, data]) => {
-      return { year, data };
-    })
-    .sort(
-      (a: GroupPostsType, b: GroupPostsType) =>
-        parseInt(b.year) - parseInt(a.year)
-    )
-    .map((item: GroupPostsType) => ({
-      ...item,
-      data: item.data.sort((a: Posts, b: Posts) =>
-        compareDesc(new Date(a.date), new Date(b.date))
-      ),
-    }));
+  const ClassP = "text-sm my-4 leading-[1.6]";
+
   return (
     <main>
-      <HeaderBox />
-      {/* banner */}
-      <section className="relative md:h-80 h-52">
-        <Image
-          src="/images/anime_character_embrace_scene.webp"
-          alt=""
-          fill
-          priority
-          sizes="100%"
-          className="rounded-lg object-cover"
-        />
-      </section>
-      {/* Follow Me */}
-      <section>
-        <div className="font-bold my-4 text-lg">Follow Me</div>
-        <div>
-          <ul className="flex flex-wrap">
-            {FollowMe.map((me) => (
-              <li key={me.title} className="pr-4">
-                <Link
-                  href={me.isEmail ? `mailto:${me.url}` : me.url}
-                  className="hover:text-[#27AE60]"
-                >
-                  {me.title}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-      {/* Recent Posts */}
-      <section>
-        <div className="font-bold my-4 text-lg">Recent Posts</div>
-        {sortedAllPosts.map((_allPosts: GroupPostsType) => (
-          <div key={_allPosts.year}>
-            <div className="mb-4">
-              {_allPosts.year}
-              <span>[{_allPosts?.data?.length || 0}]</span>
-            </div>
-            {_allPosts?.data?.map((_posts: Posts) => (
-              <div className="flex mb-4" key={_posts.title}>
-                <span className="pl-4 mr-8">
-                  {format(_posts.date, "MM/dd")}
-                </span>
-                <Link href={_posts.url} className="text-[#800] hover:underline">
-                  {_posts.category} | {_posts.title}
-                </Link>
-              </div>
-            ))}
-          </div>
-        ))}
-      </section>
+      <h2 className="my-4 font-bold text-xl">🎏关于博主</h2>
+      <p className={ClassP}>Hi, 欢迎你来到我的博客，你可以叫我小橘。</p>
+      <p className={ClassP}>
+        这里主要是一些 Coding 相关的记录,
+        当然也随机掉会落一些其他的日常记录及感想。
+      </p>
+      <p className={ClassP}>
+        喜欢📖读闲书、📝
+        想写作、🚶‍♂️散步、🛤爬山、👩‍🎤看Live和🐆逛动物园（不支持强迫性动物表演）。
+      </p>
+      <p className={ClassP}>
+        给我发邮件：
+        <Link
+          href="mailto:chengyongliu@foxmail.com"
+          className="text-blue-700 hover:underline decoration-solid"
+        >
+          chengyongliu@foxmail.com
+        </Link>
+      </p>
+      <hr className="border-dashed border-t my-2" />
+      <p className={ClassP}>
+        2025
+        年最喜欢的一句话「文字更利于深度学习和独立思考，而视频则更适合娱乐消遣与信息传播。」
+      </p>
+      <p className={ClassP}>
+        2022 年最喜欢的一句话出自彭
+        萦「吵架目的不是只发泄情绪，而是解决问题、表达脆弱、增进理解、和建立
+        connetion。」
+      </p>
+      <hr className="border-dashed border-t my-2" />
+      <h2 className="my-4 font-bold text-xl">🎠关于博客</h2>
+      <p className={ClassP}>
+        与他人建立联结的最简单方式，就是向他们分享一些东西。分享一次谈话，分享一次经历，分享一个故事，分享一个笑话，分享一顿美食，分享一个游戏，分享真实的自己。在人生中有无数次机会，我们可以跟其他人分享有趣的时光。
+      </p>
+      <hr className="border-dashed border-t my-2" />
+      <h2 className="my-4 font-bold text-xl">📜博客编年史</h2>
+      <p className={clsx(ClassP, "font-bold")}>2025 年 4 月</p>
+      <ul className="list-disc list-inside indent-[2em]">
+        <li>
+          <span className="mr-2">参考</span>
+          <Link
+            href="https://www.javis.me/"
+            className="text-blue-700 hover:underline decoration-solid"
+          >
+            大佬
+          </Link>
+          <span className="mx-2">使用</span>
+          <Link
+            href="https://nextjs.org/"
+            className="text-blue-700 hover:underline decoration-solid"
+          >
+            Next.js
+          </Link>
+          <span className="mr-2"></span>
+          15.x 进行博客改版 ，同时博客名改为「橘子路十字街道 24 号」。
+        </li>
+      </ul>
+      <p className={clsx(ClassP, "font-bold")}>2022 年 10 月</p>
+      <ul className="list-disc list-inside indent-[2em]">
+        <li>
+          开始使用
+          <Link
+            href="https://nextjs.org/"
+            className="text-blue-700 hover:underline decoration-solid ml-2"
+          >
+            Next.js
+          </Link>
+          <span className="mx-2">构建博客并托管于</span>
+          <Link
+            href="https://vercel.com/home"
+            className="text-blue-700 hover:underline decoration-solid mr-2"
+          >
+            Vercel
+          </Link>
+          平台进行部署管理
+        </li>
+      </ul>
     </main>
   );
 }

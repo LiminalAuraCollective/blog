@@ -1,57 +1,44 @@
-import { allPosts } from "contentlayer/generated";
-import type { Posts } from "contentlayer/generated";
+import MDXContentMain from "@/components/MDXContentMain";
+import { PostOverview, PostSlugProps } from "@/lib/types";
+import { allPosts } from "content-collections";
 import { notFound } from "next/navigation";
-import MDX from "@/components/MDX";
-import { numConvertToMinutes, numConvertToUnit } from "@/lib/helper";
-import Comments from "@/components/Comments";
-import PostsDirectory from "@/components/PostsDirectory";
 
-export const generateStaticParams = async () =>
-  allPosts.map((_posts) => ({ slug: _posts.slug }));
+export default async function PostSlug({ params }: PostSlugProps) {
+  const { slug } = await params;
 
-export const generateMetadata = async ({
-  params,
-}: {
-  params: { slug: string };
-}) => {
-  const posts = allPosts.find(
-    (_posts) => _posts.slug === decodeURIComponent(params.slug)
-  ) as Posts;
-  return {
-    title: posts.title,
-    description: posts.description,
-    keywords: posts?.labels.join(", "),
-  };
-};
-
-export default function PostLayout({ params }: { params: { slug: string } }) {
-  const posts = allPosts.find(
-    (_posts) => _posts.slug === decodeURIComponent(params.slug)
+  const post = (allPosts as PostOverview[]).find(
+    (p) => p._meta.directory === slug
   );
-  if (!posts) {
-    return notFound();
+  if (!post) {
+    notFound();
   }
 
   return (
     <article>
-      <div className="text-center text-[1.6rem] leading-normal font-medium">
-        {posts.title}
-      </div>
-      <div className="text-center text-xs text-[#aaa] my-3">
-        <span>字数总计：{numConvertToUnit(posts.readingTime.words)}</span>
-        <span className="mx-2">|</span>
-        <span>阅读估时：{numConvertToMinutes(posts.readingTime.time)}</span>
-      </div>
-      <PostsDirectory />
-      <MDX code={posts.body.code} />
-      <div className="text-right text-sm text-[#800] mt-4">
-        {posts.labels.map((label) => (
-          <span key={label} className="ml-3">
-            #{label.trim()}
-          </span>
-        ))}
-      </div>
-      <Comments term={posts.title} />
+      <h1 className="text-xl leading-normal font-bold my-4 text-[#222]">{post.title}</h1>
+      <p className="my-4">{post.date}</p>
+      <MDXContentMain code={post.mdx} />
     </article>
   );
 }
+
+export const generateStaticParams = async () => {
+  return (allPosts as PostOverview[]).map((post) => ({
+    slug: post._meta.directory,
+  }));
+};
+
+export const generateMetadata = async ({ params }: PostSlugProps) => {
+  const { slug } = await params;
+  const post = (allPosts as PostOverview[]).find(
+    (p) => p._meta.directory === slug
+  );
+  if (!post) {
+    return;
+  }
+
+  return {
+    title: post.title,
+    description: post.description,
+  };
+};

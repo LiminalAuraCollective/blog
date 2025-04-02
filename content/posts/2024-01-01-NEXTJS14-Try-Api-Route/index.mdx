@@ -9,8 +9,6 @@ labels:
   - 配置
 ---
 
-### 关于当前在 14.x 或 15.x 中如何声明使用 API 路由
-
 在当前 14.x~15.x 版本中，声明 api 路由时，通过在指定目录下按照指定格式进行声明
 
 1. `app`目录或者`src`目录下，创建一个 `api`目录。
@@ -36,8 +34,8 @@ export async function GET() {
 
 ```ts
 /*
-* 文件路径2 /app/api/docs/route.ts
-*/
+ * 文件路径2 /app/api/docs/route.ts
+ */
 import { NextResponse, NextRequest } from "next/server";
 
 function getUrlParams(url: string) {
@@ -84,8 +82,8 @@ export async function POST(_req: NextRequest) {
 
 ```tsx
 /*
-* 页面路径：/app/page.tsx
-*/
+ * 页面路径：/app/page.tsx
+ */
 "use client";
 
 import React from "react";

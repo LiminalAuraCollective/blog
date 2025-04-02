@@ -1,43 +1,20 @@
-@layer components {
-  .prose img {
-    @apply mx-auto mb-4 rounded shadow-md;
-  }
+.markdown-docs h1,
+h2,
+h3,
+h4 {
+  position: relative;
+}
 
-  .prose h1,
-  h2,
-  h3,
-  h4 {
-    position: relative;
-  }
-
-  /* Paragraph heading styles in articles */
-  .prose h1::before,
-  h2::before,
-  h3::before,
-  h4::before {
-    content: "";
-    position: absolute;
-    width: 4px;
-    top: 0;
-    bottom: 0px;
-    left: -16px;
-    background-color: #f27c8d;
-  }
-
-  /* In-article quote text styles */
-  .prose
-    :where(blockquote):not(
-      :where([class~="not-prose"], [class~="not-prose"] *)
-    ) {
-    font-style: normal;
-  }
-
-  /* Link styles in articles */
-  .prose a {
-    text-decoration: none;
-    color: rgb(0 150 94);
-  }
-  .prose a:hover {
-    text-decoration: underline;
-  }
+/* Paragraph heading styles in articles */
+.markdown-docs h1::before,
+h2::before,
+h3::before,
+h4::before {
+  content: "";
+  position: absolute;
+  width: 4px;
+  top: 0;
+  bottom: 0px;
+  left: -16px;
+  background-color: #f27c8d;
 }

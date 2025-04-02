@@ -1,0 +1,32 @@
+@layer base {
+  html,
+  body {
+    @apply overflow-x-hidden;
+    -webkit-tap-highlight-color: transparent;
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+    color: #444;
+  }
+
+  ::selection {
+    color: rgb(29, 29, 29);
+    background-color: rgb(61, 220, 151);
+  }
+
+  ::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: #c82f57;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+}

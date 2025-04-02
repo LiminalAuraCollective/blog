@@ -1,15 +1,25 @@
 import type { Metadata } from "next";
-import "../styles/index.css";
-import LayoutBox from "@/components/LayoutBox";
+import { MetadataConfig } from "@/lib/metadata";
+import HeaderMain from "@/components/HeaderMain";
+import "@/styles/tailwindcss.css";
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body className="max-w-3xl m-auto p-5">
+        <HeaderMain />
+        {children}
+      </body>
+    </html>
+  );
+}
 
 export const metadata: Metadata = {
-  title: "立冬 | 众里寻他千百度，蓦然回首，那人却在，灯火阑珊处",
-  authors: [
-    { name: "IIex-Lesquereux", url: "https://github.com/IIex-Lesquereux" },
-  ],
-  keywords: "Text, Blog, Chat, ACG, IIex-Lesquereux, Wallpapers, Next, Next.js",
-  description:
-    "立冬 | 众里寻他千百度，蓦然回首，那人却在，灯火阑珊处 | 记录哪些令人无法忘怀的点点滴滴",
+  ...MetadataConfig.metadata,
   icons: {
     icon: [
       { url: "/icons/favicon.ico" },
@@ -19,17 +29,3 @@ export const metadata: Metadata = {
     apple: [{ url: "/icons/apple-touch-icon.png" }],
   },
 };
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
-  return (
-    <html lang="zh-CN">
-      <body suppressHydrationWarning>
-        <LayoutBox>{children}</LayoutBox>
-      </body>
-    </html>
-  );
-}
