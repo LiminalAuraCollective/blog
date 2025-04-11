@@ -10,7 +10,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className="max-w-3xl m-auto p-5">
+      <body className="max-w-3xl m-auto p-5" suppressHydrationWarning>
         <HeaderMain />
         {children}
       </body>
