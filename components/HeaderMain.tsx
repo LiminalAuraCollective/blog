@@ -18,7 +18,7 @@ export default function HeaderMain() {
         <Link href="/links" className={LinkClass}>
           友链
         </Link>
-        <Link href="/feed" className={LinkClass}>
+        <Link href="/feed" className={LinkClass} target="_blank">
           RSS
         </Link>
       </nav>

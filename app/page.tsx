@@ -13,7 +13,7 @@ export default function Home() {
         当然也随机掉会落一些其他的日常记录及感想。
       </p>
       <p className={ClassP}>
-        喜欢📖读闲书、📝
+        喜欢的事：📖读闲书、📝
         想写作、🚶‍♂️散步、🛤爬山、👩‍🎤看Live和🐆逛动物园（不支持强迫性动物表演）。
       </p>
       <p className={ClassP}>
