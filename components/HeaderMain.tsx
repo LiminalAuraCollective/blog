@@ -15,8 +15,18 @@ export default function HeaderMain() {
         <Link href="/posts" className={LinkClass}>
           文章
         </Link>
-        <Link href="/links" className={LinkClass}>
-          友链
+        <Link
+          href="https://wallpapers-phi.vercel.app/"
+          className={LinkClass}
+          target="_blank"
+        >
+          壁纸
+        </Link>
+        <Link href="/photography" className={LinkClass}>
+          摄影
+        </Link>
+        <Link href="/books" className={LinkClass}>
+          书籍
         </Link>
         <Link href="/feed" className={LinkClass} target="_blank">
           RSS
