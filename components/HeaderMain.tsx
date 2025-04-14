@@ -28,7 +28,7 @@ export default function HeaderMain() {
         <Link href="/books" className={LinkClass}>
           书籍
         </Link>
-        <Link href="/feed" className={LinkClass} target="_blank">
+        <Link href="/rss.xml" className={LinkClass} target="_blank">
           RSS
         </Link>
       </nav>
