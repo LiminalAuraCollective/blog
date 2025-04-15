@@ -1,29 +1,31 @@
-import { Feed } from "feed";
+import RSSGenerator from "@/lib/rss";
 import { parseISO, setHours } from "date-fns";
 import { baseUrl } from "@/lib/config";
 import { postsOrderedByDate } from "@/lib/posts";
+import { IRSSChannel } from "@/lib/types";
 
 const createPostUrl = (url: string) => {
   return url + "?utm_campaign=feed&utm_source=rss2";
 };
 
-const me = {
-  name: "橘子路十字街道 24 号",
-  email: "chengyongliu@foxmail.com",
+const feedChannel: IRSSChannel = {
+  title: "橘子路十字街道 24 号",
   link: baseUrl,
+  description: "Recent content on 橘子路十字街道 24 号",
+  language: "zh-cn",
+  generator: "RSS 2.0",
+  lastBuildDate: new Date(),
+  atomLink: {
+    href: baseUrl + "/rss.xml",
+    rel: "self",
+    type: "application/rss+xml",
+  },
+  managingEditor: "chengyongliu@foxmail.com",
+  docs: "https://www.rssboard.org/rss-specification",
 };
 
 const createFeed = async () => {
-  const feed = new Feed({
-    title: "橘子路十字街道 24 号",
-    description: "Recent content on 橘子路十字街道 24 号",
-    id: baseUrl,
-    link: baseUrl,
-    language: "zh-cn",
-    favicon: `${baseUrl}/icons/favicon.ico`,
-    copyright: "Copyright © 2020 橘子路十字街道 24 号. All rights reserved",
-    author: me,
-  });
+  const feed = new RSSGenerator(feedChannel);
 
   postsOrderedByDate.forEach((post) => {
     const id = `${baseUrl}${post.url}`;
@@ -31,13 +33,16 @@ const createFeed = async () => {
     feed.addItem({
       title: post.title,
       link: url,
-      date: setHours(parseISO(post.date), 13),
+      pubDate: setHours(parseISO(post.date), 13),
       description: post.description,
-      category: [{ name: post.category }],
+      categories: [post.category],
+      guid: {
+        value: url,
+      },
     });
   });
 
-  return feed.rss2();
+  return feed.generate();
 };
 
 export const GET = async () => {
