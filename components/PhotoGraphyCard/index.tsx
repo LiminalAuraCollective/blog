@@ -23,7 +23,7 @@ export default function PhotoGraphyCard({ link, date, description }: Props) {
         <span className="text-sm capitalize">{dayOfWeek}</span>
       </div>
       <ViewImgBox src={link} />
-      <div className="text-xs line-clamp-2 mt-2">{description}</div>
+      <div className="text-xs line-clamp-2 mt-2 min-h-[32px]">{description}</div>
     </div>
   );
 }
