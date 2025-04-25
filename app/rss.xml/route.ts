@@ -20,7 +20,7 @@ const feedChannel: IRSSChannel = {
     rel: "self",
     type: "application/rss+xml",
   },
-  managingEditor: "chengyongliu@foxmail.com",
+  managingEditor: "chengyongliu@foxmail.com (橘子路十字街道 24 号)",
   docs: "https://www.rssboard.org/rss-specification",
 };
 
