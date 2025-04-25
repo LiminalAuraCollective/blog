@@ -3,6 +3,7 @@ import { MetadataConfig } from "@/lib/metadata";
 import HeaderMain from "@/components/HeaderMain";
 import "@/styles/tailwindcss.css";
 
+
 export default function RootLayout({
   children,
 }: Readonly<{

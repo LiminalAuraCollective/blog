@@ -1,7 +1,17 @@
+import PhotoGraphyCard from "@/components/PhotoGraphyCard";
 import type { Metadata } from "next";
+import { AlbumArr } from "@/lib/album";
 
 export default function Photography() {
-  return <main></main>;
+  return (
+    <main className="flex justify-between flex-wrap">
+      {AlbumArr.map((album, index) => (
+        <div className="md:mr-3 mb-5" key={index}>
+          <PhotoGraphyCard {...album} />
+        </div>
+      ))}
+    </main>
+  );
 }
 
 export const metadata: Metadata = {

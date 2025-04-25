@@ -12,6 +12,12 @@ export type PostOverview = Post & {
   mdx: string;
 };
 
+export interface AlbumProps {
+  link: string;
+  description: string;
+  date: string;
+}
+
 export type PostSlugProps = {
   params: Promise<{ slug: string }>;
 };
