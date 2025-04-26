@@ -1,3 +1,4 @@
+import Comments from "@/components/Comments";
 import MDXContentMain from "@/components/MDXContentMain";
 import { PostOverview, PostSlugProps } from "@/lib/types";
 import { allPosts } from "content-collections";
@@ -15,9 +16,12 @@ export default async function PostSlug({ params }: PostSlugProps) {
 
   return (
     <article>
-      <h1 className="text-xl leading-normal font-bold my-4 text-[#222]">{post.title}</h1>
+      <h1 className="text-xl leading-normal font-bold my-4 text-[#222]">
+        {post.title}
+      </h1>
       <p className="my-4">{post.date}</p>
       <MDXContentMain code={post.mdx} />
+      <Comments term={post.title} />
     </article>
   );
 }
