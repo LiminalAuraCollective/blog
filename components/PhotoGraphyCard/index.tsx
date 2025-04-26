@@ -3,7 +3,7 @@ import { AlbumProps } from "@/lib/types";
 import ViewImgBox from "../ViewImgBox";
 
 interface Props extends AlbumProps {
-    category?:string;
+  category?: string;
 }
 
 export default function PhotoGraphyCard({ link, date, description }: Props) {
@@ -16,14 +16,16 @@ export default function PhotoGraphyCard({ link, date, description }: Props) {
   const daysInMonth = format(_date, "dd"); // 指定月份的指定天数
 
   return (
-    <div className="relative bg-white p-6 shadow-sm md:w-xs h-auto">
+    <div className="bg-white p-6 shadow-sm md:w-xs h-auto">
       <h1 className="mb-2 text-sm capitalize">{month}</h1>
       <div className="flex mb-2 justify-between items-end">
         <span className="text-4xl leading-none font-bold">{daysInMonth}</span>
         <span className="text-sm capitalize">{dayOfWeek}</span>
       </div>
       <ViewImgBox src={link} />
-      <div className="text-xs line-clamp-2 mt-2 min-h-[32px]">{description}</div>
+      <div className="text-xs line-clamp-2 mt-2 min-h-[32px]">
+        {description}
+      </div>
     </div>
   );
 }
