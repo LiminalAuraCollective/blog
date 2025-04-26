@@ -6,7 +6,7 @@ export default function Photography() {
   return (
     <main className="flex justify-between flex-wrap">
       {AlbumArr.map((album, index) => (
-        <div className="md:mr-3 mb-5" key={index}>
+        <div className="md:mr-3 mb-5 md:w-xs w-full" key={index}>
           <PhotoGraphyCard {...album} />
         </div>
       ))}

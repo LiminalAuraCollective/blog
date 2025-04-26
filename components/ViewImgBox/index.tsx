@@ -37,6 +37,7 @@ export default function ViewImgBox({ src }: Props) {
               fill
               loading="lazy"
               onLoad={() => setLoading(false)}
+              style={{ width: "100%" }}
             />
           </div>
         </PhotoView>
