@@ -32,7 +32,7 @@ export default function Home() {
           className="text-blue-700 hover:underline decoration-solid"
           target="_blank"
         >
-          A salted fish that doesn't want to work hard
+          A salted fish that doesn&apos;t want to work hard.
         </Link>
       </p>
       <hr className="border-dashed border-t my-2" />
