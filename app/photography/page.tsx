@@ -4,11 +4,9 @@ import { AlbumArr } from "@/lib/album";
 
 export default function Photography() {
   return (
-    <main className="flex justify-between flex-wrap">
+    <main className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {AlbumArr.map((album, index) => (
-        <div className="md:mr-3 mb-5 md:w-xs w-full" key={index}>
-          <PhotoGraphyCard {...album} />
-        </div>
+        <PhotoGraphyCard {...album} key={index} />
       ))}
     </main>
   );
