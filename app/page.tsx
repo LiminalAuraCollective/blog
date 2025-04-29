@@ -25,6 +25,16 @@ export default function Home() {
           chengyongliu@foxmail.com
         </Link>
       </p>
+      <p className={ClassP}>
+        项目源地址：
+        <Link
+          href="https://github.com/TravelerAs/blog"
+          className="text-blue-700 hover:underline decoration-solid"
+          target="_blank"
+        >
+          A salted fish that doesn't want to work hard
+        </Link>
+      </p>
       <hr className="border-dashed border-t my-2" />
       <p className={ClassP}>
         2025
