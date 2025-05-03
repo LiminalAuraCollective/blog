@@ -1,20 +1,26 @@
-.markdown-docs h1,
-h2,
-h3,
-h4 {
-  position: relative;
-}
+@utility markdown-docs {
+  h1,
+  h2,
+  h3,
+  h4 {
+    position: relative;
+  }
 
-/* Paragraph heading styles in articles */
-.markdown-docs h1::before,
-h2::before,
-h3::before,
-h4::before {
-  content: "";
-  position: absolute;
-  width: 4px;
-  top: 0;
-  bottom: 0px;
-  left: -16px;
-  background-color: #f27c8d;
+  /* Paragraph heading styles in articles */
+  h1::before,
+  h2::before,
+  h3::before,
+  h4::before {
+    content: "";
+    position: absolute;
+    width: 4px;
+    top: 0;
+    bottom: 0px;
+    left: -16px;
+    background-color: #f27c8d;
+  }
+
+  img {
+    margin: 0;
+  }
 }
