@@ -3,8 +3,7 @@
 import clsx from "clsx";
 import Image from "next/image";
 import { useState } from "react";
-import { PhotoProvider, PhotoView } from "react-photo-view";
-import "react-photo-view/dist/react-photo-view.css";
+import { PhotoProvider, PhotoView } from "@/components/ReactPhotoView";
 import blurImg from "@/public/images/blur_img.png";
 
 interface Props {
