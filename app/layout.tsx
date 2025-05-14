@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { MetadataConfig } from "@/lib/metadata";
 import HeaderMain from "@/components/HeaderMain";
 import "@/styles/tailwindcss.css";
-
+import Providers from "./providers";
 
 export default function RootLayout({
   children,
@@ -12,8 +12,10 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className="max-w-3xl m-auto p-5" suppressHydrationWarning>
-        <HeaderMain />
-        {children}
+        <Providers>
+          <HeaderMain />
+          {children}
+        </Providers>
       </body>
     </html>
   );

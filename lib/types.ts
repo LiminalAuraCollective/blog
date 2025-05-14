@@ -13,7 +13,7 @@ export type PostOverview = Post & {
 };
 
 export interface AlbumProps {
-  link: string;
+  src: string;
   description: string;
   date: string;
 }
