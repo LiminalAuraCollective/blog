@@ -1,7 +1,7 @@
 @layer base {
   html,
   body {
-    @apply overflow-x-hidden;
+    @apply overflow-x-hidden text-sm;
     -webkit-tap-highlight-color: transparent;
     scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;

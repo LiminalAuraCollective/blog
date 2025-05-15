@@ -1,6 +1,7 @@
 "use client";
 
 import { useMDXComponent } from "@content-collections/mdx/react";
+import Image from "./Image";
 import Pre from "./Pre";
 
 export default function MDXContentMain({ code }: { code: string }) {
@@ -10,6 +11,7 @@ export default function MDXContentMain({ code }: { code: string }) {
       <Component
         components={{
           pre: Pre,
+          img: Image,
         }}
       />
     </div>
