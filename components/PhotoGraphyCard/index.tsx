@@ -5,6 +5,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { PhotoView } from "@/components/ImagePreview";
 import { AlbumProps } from "@/lib/types";
+import LoadingAnimation from "../LoadingAnimation";
 
 interface Props extends AlbumProps {
   blurDataURL?: string;
@@ -30,29 +31,7 @@ export default function PhotoGraphyCard({ src, date, description }: Props) {
         </div>
       </header>
       <div className="relative w-full h-40">
-        {loading && (
-          <div className="absolute w-full h-full flex animate-pulse space-x-4 items-center">
-            <div className="flex-1 space-y-6 py-1">
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-1 h-2 rounded bg-gray-200" />
-                <div className="col-span-2 h-2 rounded bg-gray-200" />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-1 h-2 rounded bg-gray-200" />
-                <div className="col-span-2 h-2 rounded bg-gray-200" />
-              </div>
-              <div className="h-2 rounded bg-gray-200" />
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-2 h-2 rounded bg-gray-200" />
-                <div className="col-span-1 h-2 rounded bg-gray-200" />
-              </div>
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-2 h-2 rounded bg-gray-200" />
-                <div className="col-span-1 h-2 rounded bg-gray-200" />
-              </div>
-            </div>
-          </div>
-        )}
+        {loading && <LoadingAnimation />}
         <PhotoView src={src}>
           <Image
             fill

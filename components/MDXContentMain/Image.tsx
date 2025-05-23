@@ -5,6 +5,7 @@ import { useState } from "react";
 import NextImage from "next/image";
 import type { ImageProps } from "next/image";
 import type { DetailedHTMLProps, ImgHTMLAttributes } from "react";
+import LoadingAnimation from "../LoadingAnimation";
 
 export default function Image(
   props: DetailedHTMLProps<
@@ -18,11 +19,7 @@ export default function Image(
   return (
     <PhotoView src={originalsrc}>
       <span className="block relative h-50 md:h-80">
-        {loading && (
-          <span className="absolute w-full h-full flex justify-center items-center h-32 bg-zinc-50 rounded-md">
-            <span className="animate-spin rounded-full h-12 w-12 border-4 border-zinc-100 border-t-transparent" />
-          </span>
-        )}
+        {loading && <LoadingAnimation />}
         <NextImage
           {...(props as ImageProps)}
           fill
