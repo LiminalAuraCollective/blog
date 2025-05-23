@@ -1,4 +1,4 @@
-import Link from "next/link";
+import NavigationLink from "@/components/NavigationLink";
 import React from "react";
 
 function TitleElement({ title, icon }: { title: string; icon: string }) {
@@ -41,22 +41,18 @@ export default function Home() {
       <PElement text="喜欢的事：📖读闲书、📝想写作、🚶‍♂️散步、🛤爬山、👩‍🎤看Live和🐆逛动物园（不支持强迫性动物表演）。" />
       <PElement>
         给我发邮件：
-        <Link
-          href="mailto:chengyongliu@foxmail.com"
-          className="text-blue-700 hover:underline decoration-solid"
-        >
+        <NavigationLink href="mailto:chengyongliu@foxmail.com">
           chengyongliu@foxmail.com
-        </Link>
+        </NavigationLink>
       </PElement>
       <PElement>
         项目源地址：
-        <Link
+        <NavigationLink
           href="https://github.com/TravelerAs/blog"
-          className="text-blue-700 hover:underline decoration-solid"
           target="_blank"
         >
           A salted fish that doesn&apos;t want to work hard.
-        </Link>
+        </NavigationLink>
       </PElement>
       <HRElement />
       <PElement text="2025 年最喜欢的一句话「文字更利于深度学习和独立思考，而视频则更适合娱乐消遣与信息传播。」" />

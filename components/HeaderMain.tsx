@@ -1,36 +1,27 @@
-import Link from "next/link";
-
-const LinkClass = "mr-3 text-blue-700 hover:underline decoration-solid";
+import NavigationLink from "./NavigationLink";
 
 export default function HeaderMain() {
   return (
     <header>
-      <Link href="/">
-        <h1 className="text-[1.2em] font-bold">橘子路十字街道 24 号</h1>
-      </Link>
+      <h1 className="text-xl font-bold">
+        <NavigationLink
+          href="/"
+          className="hover:no-underline! text-current mr-0!"
+        >
+          橘子路十字街道 24 号
+        </NavigationLink>
+      </h1>
       <nav className="my-4 text-sm">
-        <Link href="/" className={LinkClass}>
-          关于
-        </Link>
-        <Link href="/posts" className={LinkClass}>
-          文章
-        </Link>
-        <Link
+        <NavigationLink href="/">关于</NavigationLink>
+        <NavigationLink href="/posts">文章</NavigationLink>
+        <NavigationLink
           href="https://wallpapers-phi.vercel.app/"
-          className={LinkClass}
           target="_blank"
         >
           壁纸
-        </Link>
-        <Link href="/photography" className={LinkClass}>
-          摄影
-        </Link>
-        <Link href="/books" className={LinkClass}>
-          书籍
-        </Link>
-        <Link href="/rss.xml" className={LinkClass} target="_blank">
-          RSS
-        </Link>
+        </NavigationLink>
+        <NavigationLink href="/photography">摄影</NavigationLink>
+        <NavigationLink href="/rss.xml">RSS</NavigationLink>
       </nav>
     </header>
   );
