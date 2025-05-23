@@ -1,4 +1,9 @@
 @utility markdown-docs {
+  * {
+    font-size: 13px;
+    color: #444;
+  }
+
   h1,
   h2,
   h3,
@@ -20,7 +25,28 @@
     background-color: #f27c8d;
   }
 
+  blockquote {
+    font-style: normal;
+    border-inline-start-color: #919191;
+    background-color: #f2f2f2;
+    padding: 5px 10px;
+  }
+
+  blockquote p::after,
+  p::before {
+    content: "";
+  }
+
+  p code {
+    @apply mx-1 p-1 bg-[#f4f4f5] rounded-sm;
+  }
+
   img {
     margin: 0;
+  }
+
+  a {
+    @apply text-blue-700 hover:underline decoration-solid;
+    text-decoration: none;
   }
 }
