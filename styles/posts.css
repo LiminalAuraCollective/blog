@@ -8,14 +8,11 @@
   h2,
   h3,
   h4 {
-    position: relative;
+    @apply relative;
   }
 
   /* Paragraph heading styles in articles */
-  h1::before,
-  h2::before,
-  h3::before,
-  h4::before {
+  :is(h1, h2, h3, h4)::before {
     content: "";
     position: absolute;
     width: 4px;
@@ -23,6 +20,10 @@
     bottom: 0px;
     left: -16px;
     background-color: #f27c8d;
+  }
+
+  :is(h1, h2, h3, h4) a {
+    @apply text-base;
   }
 
   blockquote {
@@ -38,7 +39,7 @@
   }
 
   p code {
-    @apply mx-1 p-1 bg-[#f4f4f5] rounded-sm;
+    @apply mx-1 p-1 bg-[#f4f4f5] rounded-sm after:content-[""] before:content-[""];
   }
 
   img {
