@@ -3,15 +3,16 @@ import { parseISO, setHours } from "date-fns";
 import { baseUrl } from "@/lib/config";
 import { postsOrderedByDate } from "@/lib/posts";
 import { IRSSChannel } from "@/lib/types";
+import { MetadataConfig } from "@/lib/metadata";
 
 const createPostUrl = (url: string) => {
   return url + "?utm_campaign=feed&utm_source=rss2";
 };
 
 const feedChannel: IRSSChannel = {
-  title: "橘子路十字街道 24 号",
+  title: MetadataConfig.metadata.title.default,
   link: baseUrl,
-  description: "Recent content on 橘子路十字街道 24 号",
+  description: `Recent content on ${MetadataConfig.metadata.title.default}`,
   language: "zh-cn",
   generator: "RSS 2.0",
   lastBuildDate: new Date(),
@@ -20,7 +21,7 @@ const feedChannel: IRSSChannel = {
     rel: "self",
     type: "application/rss+xml",
   },
-  managingEditor: "chengyongliu@foxmail.com (橘子路十字街道 24 号)",
+  managingEditor: `chengyongliu@foxmail.com (${MetadataConfig.metadata.title.default})`,
   docs: "https://www.rssboard.org/rss-specification",
 };
 

@@ -1,4 +1,5 @@
 import NavigationLink from "./NavigationLink";
+import { MetadataConfig } from "@/lib/metadata";
 
 export default function HeaderMain() {
   return (
@@ -8,7 +9,7 @@ export default function HeaderMain() {
           href="/"
           className="hover:no-underline! text-current mr-0!"
         >
-          橘子路十字街道 24 号
+          {MetadataConfig.metadata.title.default}
         </NavigationLink>
       </h1>
       <nav className="my-4 text-sm">

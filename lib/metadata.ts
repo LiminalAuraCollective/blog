@@ -1,8 +1,8 @@
 export const MetadataConfig = {
   metadata: {
     title: {
-      default: "橘子路十字街道 24 号",
-      template: "%s | 橘子路十字街道 24 号",
+      default: "或朝夕万年",
+      template: "%s | 或朝夕万年",
     },
     description:
       "Text is suitable for learning and thinking, while videos are suitable for entertainment and dissemination. | 视频适合娱乐消遣与信息传播，文字利于深度学习和独立思考。",
