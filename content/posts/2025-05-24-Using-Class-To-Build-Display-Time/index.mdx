@@ -1,0 +1,168 @@
+---
+title: 使用class构建展示时间
+description: 通过使用JavaScript类声明实现页面时间展示
+category: 学习
+date: 2025-05-24
+labels:
+  - 学习
+  - Web
+  - JavaScript
+---
+
+### 通过使用 JavaScript 类声明实现页面时间展示
+
+```ts
+class TimeCalculator {
+  constructor() {
+    this.timeInterval = null;
+    this.isRunning = false;
+
+    // 获取DOM元素
+    this.yearElement1 = document.getElementById("year1");
+    this.yearElement2 = document.getElementById("year2");
+
+    // 月份 - 纯数字
+    this.monthElement1 = document.getElementById("month1");
+    // 月份 - 纯英文
+    this.monthElement2 = document.getElementById("month2");
+    this.monthElement3 = document.getElementById("month3");
+
+    // 一年中的第几周
+    this.weekElement = document.getElementById("week");
+
+    // 一年之中的第几天
+    this.dayOfYearElement = document.getElementById("dayOfYear");
+
+    // 星期几
+    this.isToDayElement = document.getElementById("isToDay");
+
+    // 一个月中的第几天
+    this.isDayToMElement = document.getElementById("dayToMonth");
+
+    // 时:分
+    this.hoursAndMElement1 = document.getElementById("hoursAndMinu1");
+    this.hoursAndMElement2 = document.getElementById("hoursAndMinu2");
+
+    // 时 - 纯数字
+    this.hoursElement = document.getElementById("timeHours");
+
+    // 分 - 纯数字
+    this.minutesElement = document.getElementById("timeMinutes");
+
+    // 秒 - 纯数字
+    this.secondsElement = document.getElementById("timeSeconds");
+
+    // 时间段
+    this.timeSlotElement = document.getElementById("timeSlot");
+
+    // 时间段占比
+    this.timeScaleElement = document.getElementById("timeScale");
+
+    // 初始化显示
+    this.updateTime();
+  }
+
+  start() {
+    if (!this.isRunning) {
+      this.updateTime();
+      this.timeInterval = setInterval(this.updateTime.bind(this), 1000);
+      this.isRunning = true;
+    }
+  }
+
+  stop() {
+    if (this.isRunning) {
+      clearInterval(this.timeInterval);
+      this.isRunning = false;
+    }
+  }
+
+  updateTime() {
+    const now = new Date();
+
+    // 获取时间部分
+    const hours = now.getHours().toString().padStart(2, "0");
+    const minutes = now.getMinutes().toString().padStart(2, "0");
+    const seconds = now.getSeconds().toString().padStart(2, "0");
+
+    // 获取日期部分
+    const year = now.getFullYear().toString();
+    const yearNumber = now.getFullYear();
+    const month = (now.getMonth() + 1).toString().padStart(2, "0");
+    const day = now.getDate().toString().padStart(2, "0");
+
+    // 获取日期部分 - 月份英文
+    const monthUS = now.toLocaleString("en-US", { month: "long" });
+
+    // 获取星期
+    const weekdays = [
+      "Sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+    ];
+    const weekday = weekdays[now.getDay()];
+
+    // 获取时间段
+    let timeSlot = "morning";
+    switch (true) {
+      case Number(hours) < 12:
+        timeSlot = "morning";
+        break;
+      case Number(hours) < 17:
+        timeSlot = "afternoon";
+        break;
+      case Number(hours) < 24:
+        timeSlot = "evening";
+        break;
+      default:
+        timeSlot = "morning";
+    }
+
+    // 获取时间段占比
+    const timeScale = ((Number(hours) / 24) * 100).toFixed(0);
+
+    // 获取年的当前天数
+    const startOfYear = new Date(yearNumber, 0, 0);
+    const diff1 = now - startOfYear;
+    const dayOfYear = Math.ceil(diff1 / (1000 * 60 * 60 * 24));
+
+    // 获取年的当前周数
+    const firstDayOfYear = new Date(yearNumber, 0, 1);
+    const diff = Math.ceil((now - firstDayOfYear) / 86400000);
+    const weekOfYear = Math.ceil((diff + firstDayOfYear.getDay() - 1) / 7);
+
+    // 更新DOM
+    this.yearElement1.textContent = year;
+    this.monthElement1.textContent = Number(month);
+    this.weekElement.textContent = weekOfYear;
+    this.dayOfYearElement.textContent = dayOfYear;
+
+    this.isToDayElement.textContent = weekday;
+
+    this.isDayToMElement.textContent = day;
+    this.monthElement3.textContent = monthUS + ",";
+    this.yearElement2.textContent = year + ".";
+
+    this.hoursAndMElement1.textContent = `- ${hours}:${minutes} -`;
+
+    this.hoursElement.textContent = hours;
+    this.minutesElement.textContent = minutes;
+    this.secondsElement.textContent = seconds;
+
+    this.hoursAndMElement2.textContent = `- ${hours}:${minutes} -`;
+    this.timeSlotElement.textContent = timeSlot;
+    this.timeScaleElement.textContent = timeScale;
+  }
+}
+
+// 初始化时钟
+document.addEventListener("DOMContentLoaded", () => {
+  const clock = new TimeCalculator();
+  // 默认自动开始
+  clock.start();
+});
+```

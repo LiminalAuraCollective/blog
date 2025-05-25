@@ -1,14 +1,13 @@
 @utility markdown-docs {
   * {
     font-size: 13px;
-    color: #444;
   }
 
   h1,
   h2,
   h3,
   h4 {
-    @apply relative;
+    position: relative;
   }
 
   /* Paragraph heading styles in articles */
