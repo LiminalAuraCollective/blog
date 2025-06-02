@@ -1,0 +1,28 @@
+---
+title: 关于ts-node无法找到ts文件运行的问题
+description: 当尝试使用ts-node运行ts文件时，出现无法找到.ts后缀文件时，我们应该如何处理
+category: 学习
+date: 2025-06-02
+labels:
+  - 学习
+  - 前端
+  - TypeScript
+---
+
+心血来潮，准备爬取想要读取的网站的消息并进行推送，因此就使用 TypeScript 进行代码规范，但是一切准好后进行项目运行时，出现无法找到 `.ts` 文件的控制台错误提示。
+
+```JSON
+Unknown file extension ".ts" for a TypeScript file
+```
+
+### 求助万能的谷歌
+在万能的谷歌上搜索了一下后，找到了许多有相同问题的[开发者反馈](https://stackoverflow.com/questions/62096269/unknown-file-extension-ts-for-a-typescript-file)。进去查看了相关讨论的相关解决方式，错误来源于 `ts-node`陷入实验性功能中,无法正常运行（看起来 23 年就不行了，结果现在 25 年了还是没有修复这个问题）。
+只好根据各位大佬提出的解决方式进行尝试性修复，但是发现类似修改 `从 package.json 中移除 "type": "module"`、`Try running ts-node with the --esm flag`、`在 tsconfig.json 文件中 添加 ts-node 配置`等方式都无法解决问题。
+
+### 最终解决方式
+最终经过仔细寻找，找到了合适的解决方式 `just use tsx which works out of the box`。直接使用 `tsx` 这个npm包替代 `ts-node`即可。
+
+```JSON
+npm i -D tsx
+npx tsx src/index.ts
+```
