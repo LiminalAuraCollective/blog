@@ -41,14 +41,14 @@ export default function Home() {
       <PElement text="喜欢的事：📖读闲书、📝想写作、🚶‍♂️散步、🛤爬山、👩‍🎤看Live和🐆逛动物园。" />
       <PElement>
         给我发邮件：
-        <NavigationLink href="mailto:chengyongliu@foxmail.com">
-          38D46461FDD62995
+        <NavigationLink href="mailto:implicit-charm@foxmail.com">
+          implicit-charm@foxmail.com
         </NavigationLink>
       </PElement>
       <PElement>
         项目源地址：
         <NavigationLink
-          href="https://github.com/TravelerAs/blog"
+          href="https://github.com/implicit-charm/blog"
           target="_blank"
         >
           A salted fish that doesn&apos;t want to work hard.

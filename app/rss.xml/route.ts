@@ -21,7 +21,7 @@ const feedChannel: IRSSChannel = {
     rel: "self",
     type: "application/rss+xml",
   },
-  managingEditor: `chengyongliu@foxmail.com (${MetadataConfig.metadata.title.default})`,
+  managingEditor: `implicit-charm@foxmail.com (${MetadataConfig.metadata.title.default})`,
   docs: "https://www.rssboard.org/rss-specification",
 };
 
