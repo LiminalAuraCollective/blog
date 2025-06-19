@@ -1,0 +1,391 @@
+---
+title: 前端文件下载
+description: 如何在前端实现文件下载功能（前端下载的各种方法）
+date: 2021-04-12
+category: 学习
+labels:
+  - 前端
+  - JavaScript
+  - HTTP/HTTPS
+---
+
+在日常开发中，对于文件下载是 web 开发中一个很常见的需求，无论是下载数据、图片、文档又或者是应用程序包。
+
+### 使用 `<a>` 标签的 `download` 属性
+
+通常这是实现文件下载的最简单实现方式，尤其适用于下载静态资源文件或已知 URL 的文件。
+
+> HTML5 为 `<a>` 标签引入了 download 属性。当用户点击带有 download 属性的链接时，浏览器会强制下载链接指向的资源（这并不会触发它的导航功能），我们还可以通过为 download 属性指定一个值作为建议的文件下载名称。
+
+```html
+<!-- 下载同源文件，并建议下载文件名称为 test.pdf -->
+<a href="/files/test.pdf" download="test.pdf">测试报告</a>
+
+<!-- 下载图片，浏览器会自动推断文件名称和文件类型 -->
+<a href="/images/wallpaper-1233434.png" download>图片下载</a>
+
+<!-- 下载跨域文件（服务端应设置 Access-Control-Allow-Origin) -->
+<a href="https://example.com/everyone.xlsx" download="统计.xlsx"
+  >跨域文件下载</a
+>
+```
+
+优点：
+
+- 实现简单，无需 JavaScript。
+
+- 兼容性好，现代浏览器都支持。
+
+- 支持跨域： 如果服务器配置允许，可以下载不同域的文件。
+
+缺点：
+
+- 同源策略限制：对于跨域资源请求，需要服务端正确配置 `Access-Content-Allow-Origin` ，否则将无法正常进行下载请求。
+
+- 动态内容：不适用于需要动态生成或通过 API 获取数据后再下载的场景。
+
+- 请求控制：无法自定义添加请求头（如 Authorization）。
+
+- 无法获取下载进度：无法监听下载的进度，对用户体验不够友好。
+
+- 无法处理错误：无法捕获下载失败等错误信息。
+
+- 无法下载跨域且未设置 CORS 的文件。
+
+### 使用 `windown.open()` 或者 `window.location.href`
+
+这种方式通常用于打开新窗口或新标签页来显示文件，如果文件类型浏览器无法直接预览（如压缩包），则会触发下载。
+
+> 本质是通过导航到一个 URL，若服务器在该 URL 响应时设置了 `Content-Disposition:attachment; filename="filename.ext"` 这样的 HTTP 头部，浏览器就会触发下载功能。
+
+```js
+const downloadFileFromServer = (url) => {
+  window.location.href = url;
+};
+
+const downloadFileInNewTab = (url) => {
+  window.open(url, "_blank");
+};
+```
+
+优点：
+
+- 实现简单
+
+- 只要服务器正确设置响应头，就可以直接下载跨域文件。
+
+缺点：
+
+- 不保证下载： 如果浏览器支持预览该文件类型，会直接在当前标签页或新标签页中打开，而不是强制下载。
+
+- 文件名控制在后端：文件名由服务器的 `Content-Disposition` 头部决定，前端无法直接控制（除非文件名在 URL 参数中）
+
+- 用户体验度欠缺：`Window.location.href` 会导致页面出现跳转，若下载失败或响应内容不是文件流，用户体验可能会不好。`Window.open()` 弹出 窗口可能会被拦截器阻止。
+
+- 请求控制：无法自定义添加请求头。
+
+- 不适用于 Blob 数据：不适用于前端生成的 Blob 数据下载。
+
+- 无法获取下载进度或错误信息。
+
+### 使用 `Fetch API` 或 `XMLHttpRequest（XHR）` + `Blob` + `URL.createIbjectURL()`
+
+适用于需要认证、动态生成内容或处理从 API 获取的二进制数据。
+
+原理：
+
+- 1. 使用 `Fetch API` 或 `XHR` 向服务端发送请求，获取文件数据。
+- 2. 将响应体（通常为二进制数据）转换为 `Blob` 对象（Blob 对象表示一个不可变的，原始数据的类文件对象）。
+- 3. 使用 `URL.createIbjectURL(blob)` 为这个 `Blob` 对象创建一个临时的 URL。这个 URL 指向浏览器内存中的数据。
+- 4. 创建一个隐藏的 `<a>` 标签，将其 `href` 属性值设置为这个临时的 URL，并设置 `download` 属性为期望的文件名称。
+- 5. 将这个 `<a>` 标签元素添加到 body DOM 元素中，并通过模拟点击触发下载事件。
+- 6. 下载完成后，从 body DOM 元素中移除掉添加的 `<a>` 标签元素，并使用 `URL.revokeObjectURL(objectURL)` 的方式释放之前创建的临时 URL，以避免内存泄漏。
+
+```js
+async function downloadWithFetch(fileUrl, filename = "example-name.xlsx") {
+  try {
+    const response = await fetch(fileUrl, {
+      method: "GET", // "POST" 请求可以带请求体
+      headers: {
+        Authorization: "Bearer YOUR_ACCESS_TOKEN", // 示例：添加认证头
+        // "Content-Type": "application/json" // 若是POST请求且存在请求体
+      },
+      // body: JSON.stringify({ params: 'some_param'}) // 示例：POST请求体
+    });
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    const blob = await response.blob(); // 获取响应体Blob对象
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+
+    document.body.removeChild(a); // 释放URL对象
+    URL.revokeObjectURL(url);
+    console.log("文件下载成功");
+  } catch (error) {
+    console.error("下载失败：", error);
+  }
+}
+```
+
+优点：
+
+- 完全控制：可以自定义设置请求头（如认证信息）、请求体、请求方法。
+- 处理动态数据：非常适合从 API 获取数据后下载。
+- 错误处理：可以精确捕获和处理请求过程中出现的错误情况。
+- 进度指示：`XMLHttpRequest` 支持 `Progress` 事件，可以实现下载进度条（Fetch API 也 可以通过 ReadableStream 实现。）
+- 前端生成文件：可以将前端生成的 Canvas 图像、JSON 数据等转换问 `Blob` 直接下载。
+
+缺点：
+
+- 适合小文件场景
+- 实现相对复杂
+- 需要手动处理 `Blob` 和 `Object URL`。
+- 注意内存管理，及时 `revokeObjectURL`
+
+### 大文件下载处理
+
+大文件下载的关键在于如何避免一次性将整个文件加载到内存中，以及如何提供更好的用户体验（如进度显示、断点续传）。
+
+> 分块下载：前端通过设置 HTTP 请求头 Range 来请求文件的指定范围数据。后端根据 Range 头返回对应范围的数据，并设置 Content-Range 和 Accept-Ranges 头。前端多次请求不同范围的数据，最终将所有分块数据合并成完整文件。
+
+以下前端实现代码由 AI 生成，请注意内容分别
+
+```js
+/**
+ * 大文件分块下载功能
+ *
+ * @param {string} fileUrl - 文件的下载 URL，后端需要支持 Range 请求头
+ * @param {string} fileName - 下载后保存的文件名
+ * @param {number} [chunkSizeKB=1024] - 每个分块的大小，单位 KB (默认为 1024KB = 1MB)
+ * @param {function} [onProgress] - 下载进度回调函数 (currentBytes, totalBytes) => void
+ * @param {function} [onError] - 错误回调函数 (error) => void
+ * @returns {Promise<void>}
+ */
+async function downloadFileInChunks(
+  fileUrl,
+  fileName,
+  chunkSizeKB = 1024,
+  onProgress,
+  onError
+) {
+  const chunkSize = chunkSizeKB * 1024; // 转换为字节
+
+  let abortController = new AbortController(); // 用于取消下载的 AbortController
+  const signal = abortController.signal;
+
+  // 返回一个 Promise，以便外部可以 await 或 .then/.catch
+  return new Promise(async (resolve, reject) => {
+    try {
+      // 1. 获取文件总大小 (HEAD 请求)
+      const headResponse = await fetch(fileUrl, {
+        method: "HEAD",
+        signal: signal,
+      });
+
+      if (!headResponse.ok) {
+        const error = new Error(
+          `无法获取文件大小 (HTTP ${headResponse.status}): ${headResponse.statusText}`
+        );
+        if (onError) onError(error);
+        return reject(error);
+      }
+
+      const contentLength = headResponse.headers.get("Content-Length");
+      if (!contentLength) {
+        const error = new Error(
+          "服务器未返回 Content-Length 头，无法进行分块下载。"
+        );
+        if (onError) onError(error);
+        return reject(error);
+      }
+      const totalSize = parseInt(contentLength, 10);
+
+      let downloadedSize = 0;
+      const fileChunks = []; // 用于存储所有下载到的 Blob 片段
+
+      // 初始化进度回调
+      if (onProgress) onProgress(0, totalSize);
+
+      console.log(
+        `[下载开始] 文件: ${fileName}, 总大小: ${(
+          totalSize /
+          (1024 * 1024)
+        ).toFixed(2)} MB`
+      );
+
+      // 2. 循环发送分块下载请求
+      while (downloadedSize < totalSize) {
+        // 检查是否已取消下载
+        if (signal.aborted) {
+          const error = new Error("下载已被用户取消。");
+          error.name = "AbortError"; // 模拟 AbortError
+          if (onError) onError(error);
+          return reject(error);
+        }
+
+        const start = downloadedSize;
+        const end = Math.min(downloadedSize + chunkSize - 1, totalSize - 1);
+
+        console.log(`[请求分块] bytes=${start}-${end}`);
+
+        const response = await fetch(fileUrl, {
+          headers: {
+            Range: `bytes=${start}-${end}`,
+          },
+          signal: signal, // 传递 AbortSignal
+        });
+
+        if (!response.ok) {
+          const error = new Error(
+            `下载分块失败 (HTTP ${response.status}): ${response.statusText}`
+          );
+          if (onError) onError(error);
+          return reject(error);
+        }
+
+        const blob = await response.blob();
+        fileChunks.push(blob);
+        downloadedSize += blob.size; // 累加实际下载的字节数
+
+        // 更新进度回调
+        if (onProgress) onProgress(downloadedSize, totalSize);
+      }
+
+      // 只有在未取消的情况下才合并和保存文件
+      if (!signal.aborted) {
+        // 3. 所有分块下载完成后，合并所有 Blob 片段
+        const fullBlob = new Blob(fileChunks);
+        const downloadUrl = URL.createObjectURL(fullBlob);
+
+        // 4. 创建隐藏的 <a> 标签触发下载
+        const a = document.createElement("a");
+        a.href = downloadUrl;
+        a.download = fileName; // 设置下载文件名
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+
+        // 5. 释放 Blob URL 资源
+        URL.revokeObjectURL(downloadUrl);
+
+        console.log(`[下载完成] 文件: ${fileName}`);
+        resolve(); // 下载成功
+      }
+    } catch (error) {
+      if (error.name === "AbortError") {
+        console.warn("[下载取消] 操作被中止。");
+      } else {
+        console.error("[下载失败] 发生错误:", error);
+      }
+      if (onError) onError(error);
+      reject(error); // 抛出错误
+    }
+  });
+}
+
+// =========================================================
+// 外部使用示例：
+// =========================================================
+
+// 注意：在实际应用中，fileUrl 应该指向你后端支持 Range 请求的下载接口
+const MY_FILE_URL =
+  "http://localhost:3000/download-large-file/your_large_file.zip";
+const MY_FILE_NAME = "downloaded_archive.zip";
+const CHUNK_SIZE_KB = 512; // 可以调整分块大小，例如 512KB
+
+let currentAbortController = null; // 用于管理当前下载任务的 AbortController
+
+// 启动下载的函数
+async function startDownload() {
+  // 确保没有正在进行的下载任务
+  if (currentAbortController) {
+    console.warn("已有下载任务正在进行，请先取消或等待完成。");
+    return;
+  }
+
+  // 创建新的 AbortController
+  currentAbortController = new AbortController();
+
+  console.log("开始下载...");
+
+  try {
+    await downloadFileInChunks(
+      MY_FILE_URL,
+      MY_FILE_NAME,
+      CHUNK_SIZE_KB,
+      (downloadedBytes, totalBytes) => {
+        const progress = (downloadedBytes / totalBytes) * 100;
+        console.log(
+          `进度: ${progress.toFixed(2)}% (${(
+            downloadedBytes /
+            (1024 * 1024)
+          ).toFixed(2)} MB / ${(totalBytes / (1024 * 1024)).toFixed(2)} MB)`
+        );
+        // 在这里更新你的 UI 进度条
+        // 例如：document.getElementById('progress-bar').style.width = `${progress}%`;
+        // 例如：document.getElementById('progress-text').textContent = `${progress.toFixed(2)}%`;
+      },
+      (error) => {
+        // 错误处理回调
+        console.error("下载过程中发生错误:", error.message);
+        // 例如：document.getElementById('status-message').textContent = `下载失败: ${error.message}`;
+      }
+    );
+    console.log("所有分块下载任务成功完成！");
+    currentAbortController = null; // 下载完成后清除
+  } catch (err) {
+    if (err.name === "AbortError") {
+      console.log("下载任务被取消。");
+    } else {
+      console.error("下载任务最终失败:", err);
+    }
+    currentAbortController = null; // 无论成功失败，都清除
+  }
+}
+
+// 取消下载的函数
+function cancelDownload() {
+  if (currentAbortController) {
+    console.log("正在取消下载...");
+    currentAbortController.abort(); // 触发取消操作
+    currentAbortController = null; // 立即清除
+  } else {
+    console.log("没有正在进行的下载任务。");
+  }
+}
+
+// 如果你想在页面加载后立即开始下载，可以调用：
+// startDownload();
+
+// 或者如果你有按钮，可以这样绑定事件：
+// document.getElementById('startButton').addEventListener('click', startDownload);
+// document.getElementById('cancelButton').addEventListener('click', cancelDownload);
+```
+
+优点：
+
+- 支持大文件下载： 这是最主要的优点。它避免了将整个大文件一次性加载到浏览器内存中，从而防止了内存溢出和页面崩溃，使得理论上可以下载任意大小的文件。
+
+- 支持断点续传： 如果下载过程中网络中断、浏览器关闭或发生其他错误，可以记录已下载的块信息。用户重新开始下载时，可以从上次中断的地方继续，而不是从头开始，极大地提升了用户体验，尤其是在网络不稳定的情况下。
+
+- 进度可视化和更好的用户体验： 因为可以知道已下载的字节数和总字节数，前端能够精确地显示下载进度条，给用户明确的反馈，提升用户体验。
+
+- 更强的错误恢复能力： 如果某个分块下载失败，可以针对性地重试该分块，而不是整个文件，提高了下载的成功率。
+
+- 减少服务器压力（特定场景）： 在某些 CDN 或分布式存储场景下，分块下载可能更有效地利用服务器资源。
+
+缺点：
+
+- 实现复杂性增加： （1）前端： 需要编写更多的 JavaScript 代码来管理分块请求、合并 Blob、处理进度、错误和取消逻辑。相较于简单的 `<a>` 标签下载或 Fetch API 一次性下载，代码量和逻辑复杂性都显著提升。（2）后端： 服务器必须支持 HTTP Range 请求。这意味着后端需要解析 Range 头，从文件中读取指定范围的字节，并正确设置 Content-Range、Accept-Ranges 和 Content-Length 等响应头。如果后端没有原生支持，需要额外开发或配置。
+
+- 网络请求数量增加： 一个文件会被拆分成多个小块，每个小块都需要发送一个独立的 HTTP 请求。这会导致：（1）额外的 HTTP 开销： 每次请求和响应都需要完整的 HTTP 头，这会增加一些网络负载。（2）潜在的服务器连接压力： 短时间内大量的小请求可能会对服务器的连接池管理带来压力，尽管现代服务器通常能很好地处理。
+
+- 浏览器兼容性（Blob 和 URL.createObjectURL）： 虽然现代浏览器对这些 API 支持良好，但对于非常老的浏览器版本，可能存在兼容性问题。AbortController 也是相对较新的 API，但在主流浏览器中已广泛支持。
+
+- 客户端资源消耗： 尽管避免了单次内存溢出，但频繁的文件 I/O 和 Blob 合并操作仍然会消耗一定的 CPU 和内存资源，尤其是在处理非常大的文件和非常小的分块时。

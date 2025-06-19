@@ -24,7 +24,7 @@ export default function TOC() {
   }, []);
 
   return (
-    <nav className="hidden md:block fixed top-18 right-0 mt-6 max-h-[calc(100vh-6rem)] overflow-y-auto pr-4">
+    <nav className="hidden xl:block fixed top-18 right-0 mt-6 max-h-[calc(100vh-6rem)] overflow-y-auto pr-4 max-w-[calc(100vw-80rem)]">
       {!!headings.length && (
         <>
           <h2 className="text-xl font-semibold mb-4">目录</h2>
