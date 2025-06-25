@@ -1,0 +1,199 @@
+---
+title: 使用 createContext 创建组件能够提供与读取的 上下文（context）
+description: 使用 createContext 创建组件能够提供与读取的 上下文（context）
+category: 学习
+date: 2025-06-25
+labels:
+  - 学习
+  - Web
+  - React
+---
+
+在 Next.js 中，你可以利用 React 的 createContext API 来创建和管理全局状态，并在组件树中共享数据，而无需手动通过 props 一层层传递。这对于主题、用户认证信息或任何需要在多个组件中访问的数据都非常有用。
+
+### 1.创建上下文 (Context)
+
+首先，你需要使用 createContext 创建一个上下文对象。通常，我们会将上下文定义在一个单独的文件中，以便于管理。
+
+```tsx
+// /components/features/context/index.tsx
+"use client"; // 👈 必须标记为客户端组件，因为这里使用了 React Hooks 和浏览器 API (localStorage)
+
+import React, {
+  createContext,
+  useState,
+  useContext,
+  useCallback,
+  useEffect, // 引入 useEffect Hook 用于副作用操作 (如保存数据到 localStorage)
+  PropsWithChildren, // 引入 PropsWithChildren 用于定义 children 属性的类型
+} from "react";
+
+// --- 类型定义 ---
+// 1. 定义通知 (Notification) 对象的接口
+interface Notification {
+  id: number; // 通知ID，通常为数字
+  message: string; // 通知内容，为字符串
+}
+
+// 2. 定义全局状态 Context 中包含的状态和函数的接口
+interface GlobalStateContextType {
+  theme: "light" | "dark"; // 主题，只能是 'light' 或 'dark'
+  toggleTheme: () => void; // 切换主题的函数，无参数无返回值
+  notifications: Notification[]; // 通知列表，是一个 Notification 类型的数组
+  addNotification: (message: string) => void; // 添加通知的函数，接受一个字符串消息
+  removeNotification: (id: number) => void; // 移除通知的函数，接受一个数字ID
+}
+
+// --- Context 创建 ---
+// 3. 创建全局状态 Context 对象
+// 这里明确指定 Context 的类型为 GlobalStateContextType 或 undefined。
+// 默认值设置为 undefined，以便在使用 useContext 时可以检查是否在 Provider 内部。
+export const GlobalStateContext = createContext<
+  GlobalStateContextType | undefined
+>(undefined);
+
+// --- Provider 组件 ---
+// 4. 创建全局状态 Provider 组件
+// 使用 PropsWithChildren 来简化 children 属性的类型定义
+export const GlobalStateProvider = ({ children }: PropsWithChildren) => {
+  // 初始化主题状态：尝试从 localStorage 读取，如果不存在或在服务器端，则默认为 'light'
+  const [theme, setTheme] = useState<"light" | "dark">(() => {
+    // 检查当前环境是否是浏览器（客户端）
+    if (typeof window !== "undefined") {
+      const storedTheme = localStorage.getItem("appTheme"); // 从 localStorage 获取保存的主题
+      // 严格检查获取到的值，确保它是 'dark' 或 'light'，否则使用 'light'
+      return storedTheme === "dark" ? "dark" : "light";
+    }
+    return "light"; // 如果是服务器端渲染或初次加载时，默认使用 'light'
+  });
+
+  // 初始化通知列表状态：尝试从 localStorage 读取，如果不存在或解析失败，则默认为空数组
+  const [notifications, setNotifications] = useState<Notification[]>(() => {
+    if (typeof window !== "undefined") {
+      const storedNotifications = localStorage.getItem("appNotifications"); // 从 localStorage 获取保存的通知
+      try {
+        // 尝试将 JSON 字符串解析回数组，如果失败则返回空数组
+        return storedNotifications ? JSON.parse(storedNotifications) : [];
+      } catch (e) {
+        console.error("解析保存的通知失败:", e); // 打印解析错误
+        return []; // 解析失败时返回空数组
+      }
+    }
+    return []; // 如果是服务器端渲染，默认返回空数组
+  });
+
+  // 使用 useEffect 监听 'theme' 状态变化，并将其保存到 localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("appTheme", theme); // 将当前主题保存到 localStorage
+    }
+  }, [theme]); // 依赖数组：当 'theme' 发生变化时，此 effect 会重新运行
+
+  // 使用 useEffect 监听 'notifications' 状态变化，并将其转换为 JSON 字符串保存到 localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("appNotifications", JSON.stringify(notifications)); // 将通知数组转换为 JSON 字符串并保存
+    }
+  }, [notifications]); // 依赖数组：当 'notifications' 发生变化时，此 effect 会重新运行
+
+  // --- Actions (操作函数) ---
+  // 使用 useCallback 优化 toggleTheme 函数，避免不必要的重新创建
+  const toggleTheme = useCallback(() => {
+    setTheme((prevTheme) => (prevTheme === "light" ? "dark" : "light"));
+  }, []); // 依赖数组为空，表示此函数不会因外部变量变化而改变
+
+  // 使用 useCallback 优化 addNotification 函数
+  const addNotification = useCallback((message: string) => {
+    setNotifications((prevNotifications) => [
+      ...prevNotifications, // 展开之前的通知
+      { id: Date.now(), message }, // 添加新的通知，id 使用当前时间戳
+    ]);
+  }, []);
+
+  // 使用 useCallback 优化 removeNotification 函数
+  const removeNotification = useCallback((id: number) => {
+    setNotifications(
+      (prevNotifications) =>
+        prevNotifications.filter((notif) => notif.id !== id) // 过滤掉指定 id 的通知
+    );
+  }, []);
+
+  // 将所有状态和操作函数打包成一个对象，作为 Context 的 value
+  const contextValue: GlobalStateContextType = {
+    theme,
+    toggleTheme,
+    notifications,
+    addNotification,
+    removeNotification,
+  };
+
+  return (
+    // 提供 Context 的值给所有子组件
+    <GlobalStateContext.Provider value={contextValue}>
+      {children}
+    </GlobalStateContext.Provider>
+  );
+};
+
+// --- Hook for Context Consumption ---
+// 5. 创建一个自定义 Hook，方便在组件中使用全局状态（使用此 Hook 的地方，必须声明在客户端 -> "use client"）
+export const useGlobalState = () => {
+  const context = useContext(GlobalStateContext); // 获取 Context 的值
+  // 如果 context 为 undefined，说明 useGlobalState 在 Provider 外部被调用，抛出错误
+  if (context === undefined) {
+    throw new Error("useGlobalState 必须在 GlobalStateProvider 内部使用");
+  }
+  return context; // 返回 Context 的值
+};
+```
+
+### 2.提供上下文 (Context Provider)
+
+创建上下文后，你需要使用上下文对象的 .Provider 组件来“提供”数据。Provider 组件接收一个 value prop，这个 value 将是所有消费这个上下文的子组件能够访问到的数据。通常，你会在应用的高层级（例如 _app.js 或一个布局组件）包装 Provider。
+
+在 _app.js 中提供上下文 (适用于全局数据)
+如果你希望上下文数据在整个 Next.js 应用中都可用，那么在 pages/layout.tsx 中包裹 Provider 是一个常见的做法。
+
+```tsx
+// pages/layout.tsx
+import "../styles/tailwindcss.css";
+import Header from "@/components/layout/header";
+import { GlobalStateProvider } from "@/components/features/context";
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body suppressHydrationWarning className="max-w-3xl m-auto p-5">
+        <GlobalStateProvider>
+          <Header />
+          {children}
+        </GlobalStateProvider>
+      </body>
+    </html>
+  );
+}
+```
+
+### 3.使用 Hook 读取上下文 (Consuming Context)
+
+这是在函数组件中读取上下文最推荐的方式,它简洁且易于使用。
+
+```tsx
+'use client';
+
+import { useGlobalState } from '@/components/features/context';
+
+export default function Home() {
+  const { theme, toggleTheme } = useGlobalState();
+  console.log(theme);
+  return (
+    <main>
+      <button onClick={() => toggleTheme()}>主题切换</button>
+    </main>
+  );
+}
+```
