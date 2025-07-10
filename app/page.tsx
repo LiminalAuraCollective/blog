@@ -36,7 +36,7 @@ export default function Home() {
   return (
     <main>
       <TitleElement title="关于博主" icon="✨" />
-      <PElement text="Hi, 欢迎你来到我的博客，你可以叫我小年。" />
+      <PElement text="Hi, 欢迎你来到我的博客，我是 &lt;Liminal Aura Collective&gt;" />
       <PElement text="这里主要是一些 Coding 相关的记录（bushi）,当然也随机掉会落一些其他的日常记录及感想。" />
       <PElement text="喜欢的事：📖读闲书、📝想写作、🚶‍♂️散步、🛤爬山、👩‍🎤看Live和🐆逛动物园。" />
       <PElement>
@@ -48,7 +48,7 @@ export default function Home() {
       <PElement>
         项目源地址：
         <NavigationLink
-          href="https://github.com/implicit-charm/blog"
+          href="https://github.com/LiminalAuraCollective/blog"
           target="_blank"
         >
           A salted fish that doesn&apos;t want to work hard.
