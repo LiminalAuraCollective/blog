@@ -8,7 +8,8 @@
     -moz-osx-font-smoothing: grayscale;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
-    color: #444;
+    color: #292929;
+    background: #eee;
   }
 
   ::selection {
@@ -30,7 +31,10 @@
     background-color: transparent;
   }
 
-  img {
-    @apply cursor-pointer;
+  #main-box {
+    @apply min-h-screen;
+    background-image: url(/images/paper.png);
+    background-repeat: no-repeat;
+    background-position: top right;
   }
 }

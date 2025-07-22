@@ -1,44 +1,39 @@
-import Comments from "@/components/Comments";
-import MDXContentMain from "@/components/MDXContentMain";
-import TOC from "@/components/TOC";
-import { PostOverview, PostSlugProps } from "@/lib/types";
+import MDX from "@/components/ui/mdx";
+import TOC from "@/components/ui/toc";
+import { PostOverview } from "@/lib/types";
 import { allPosts } from "content-collections";
 import { notFound } from "next/navigation";
 
-export default async function PostSlug({ params }: PostSlugProps) {
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
+export default async function Slug({ params }: Props) {
   const { slug } = await params;
 
-  const post = (allPosts as PostOverview[]).find(
-    (p) => p._meta.directory === slug
-  );
+  const post = (allPosts as PostOverview[]).find((p) => p.hashCode === slug);
   if (!post) {
     notFound();
   }
-
   return (
     <article>
-      <h1 className="text-xl leading-normal font-bold my-4 text-[#222]">
-        {post.title}
-      </h1>
+      <h1 className="font-bold mb-4 text-lg">{post.title}</h1>
       <p className="my-4">{post.date}</p>
-      <MDXContentMain code={post.mdx} />
+      <MDX code={post.mdx} />
       <TOC />
-      <Comments term={post.title} />
     </article>
   );
 }
 
 export const generateStaticParams = async () => {
   return (allPosts as PostOverview[]).map((post) => ({
-    slug: post._meta.directory,
+    slug: post.hashCode,
   }));
 };
 
-export const generateMetadata = async ({ params }: PostSlugProps) => {
+export const generateMetadata = async ({ params }: Props) => {
   const { slug } = await params;
-  const post = (allPosts as PostOverview[]).find(
-    (p) => p._meta.directory === slug
-  );
+  const post = (allPosts as PostOverview[]).find((p) => p.hashCode === slug);
   if (!post) {
     return;
   }

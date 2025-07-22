@@ -10,83 +10,10 @@ export type PostOverview = Post & {
   _meta: unknown;
   slug: string;
   mdx: string;
+  hashCode: string;
 };
 
-export interface AlbumProps {
-  src: string;
-  description: string;
-  date: string;
-}
-
-export type PostSlugProps = {
-  params: Promise<{ slug: string }>;
+export type MindType = {
+  title: string;
+  minds: string[];
 };
-
-export interface IRSSItem {
-  title: string;
-  link: string;
-  description: string;
-  author?: string;
-  categories?: string[];
-  comments?: string;
-  enclosure?: {
-    url: string;
-    length: number;
-    type: string;
-  };
-  guid?: {
-    value: string;
-    isPermaLink?: boolean;
-  };
-  pubDate?: Date;
-  source?: {
-    url: string;
-    name: string;
-  };
-}
-
-export interface IRSSChannel {
-  title: string;
-  link: string;
-  description: string;
-  language?: string;
-  copyright?: string;
-  managingEditor?: string;
-  webMaster?: string;
-  pubDate?: Date;
-  lastBuildDate?: Date;
-  categories?: string[];
-  generator?: string;
-  docs?: string;
-  cloud?: {
-    domain: string;
-    port: number;
-    path: string;
-    registerProcedure: string;
-    protocol: string;
-  };
-  atomLink?: {
-    href: string;
-    rel?: string; // 默认 "self"
-    type?: string; // 默认 "application/rss+xml"
-  };
-  ttl?: number;
-  image?: {
-    url: string;
-    title: string;
-    link: string;
-    width?: number;
-    height?: number;
-    description?: string;
-  };
-  rating?: string;
-  textInput?: {
-    title: string;
-    description: string;
-    name: string;
-    link: string;
-  };
-  skipHours?: number[];
-  skipDays?: string[];
-  items?: IRSSItem[];
-}

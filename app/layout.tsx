@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
-import { MetadataConfig } from "@/lib/metadata";
-import HeaderMain from "@/components/HeaderMain";
-import "@/styles/tailwindcss.css";
-import Providers from "./providers";
+import "../styles/tailwindcss.css";
+import { baseUrl, metaConfig } from "@/lib/metadata";
+import Header from "@/components/layouts/header";
 
 export default function RootLayout({
   children,
@@ -10,30 +9,22 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className="max-w-3xl m-auto p-5" suppressHydrationWarning>
-        <Providers>
-          <HeaderMain />
+    <html lang="en">
+      <body suppressHydrationWarning>
+        <main className="mx-auto max-w-3xl p-5" id="main-box">
+          <Header />
           {children}
-        </Providers>
+        </main>
       </body>
     </html>
   );
 }
 
 export const metadata: Metadata = {
-  ...MetadataConfig.metadata,
-  icons: {
-    icon: [
-      { url: "/icons/favicon.ico" },
-      { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-    ],
-    apple: [{ url: "/icons/apple-touch-icon.png" }],
-  },
-  alternates: {
-    types: {
-      "application/rss+xml": "/rss.xml",
-    },
+  ...metaConfig,
+  metadataBase: new URL(baseUrl),
+  title: {
+    default: metaConfig.title,
+    template: `%s | ${metaConfig.title}`,
   },
 };

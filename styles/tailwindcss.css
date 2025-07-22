@@ -1,7 +1,9 @@
 @import "tailwindcss";
 
+/* customize */
 @import "./base.css";
-@import "./posts.css";
-@import "./custom.css";
+@import "./customize.css";
+@import "./markdown.css";
 
+/* plugin */
 @plugin "@tailwindcss/typography";
