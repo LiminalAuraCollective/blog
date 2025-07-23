@@ -29,7 +29,7 @@ export default function Pre({
         <button
           disabled={isCopied}
           onClick={handleClickCopy}
-          className="absolute right-4 size-6 cursor-pointer"
+          className="absolute right-4 size-4 cursor-pointer"
         >
           {isCopied ? <Check color="#00c9a7" /> : <Copy color="#009efa" />}
         </button>
