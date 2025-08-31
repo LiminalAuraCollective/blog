@@ -9,7 +9,7 @@
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
     color: #292929;
-    background: #eee;
+    /* background: #eee; */
   }
 
   ::selection {
